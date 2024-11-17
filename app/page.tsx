@@ -1,101 +1,294 @@
-import Image from "next/image";
+'use client'
+
+import { motion, useScroll, useTransform } from 'framer-motion'
+import Image from 'next/image'
+import { useRef } from 'react'
+import { Button } from "@/components/ui/button"
+import { Shell, Waves, Anchor, Ship } from 'lucide-react'
+import Navbar from '@/components/Navbar'
+import Link from 'next/link'
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const targetRef = useRef(null)
+  const { scrollYProgress } = useScroll({
+    target: targetRef,
+    offset: ["start end", "end start"]
+  })
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+  const opacity = useTransform(scrollYProgress, [0, 0.3], [0, 1])
+  const scale = useTransform(scrollYProgress, [0, 0.3], [0.9, 1])
+
+  return (
+    <div className="min-h-screen overflow-hidden" ref={targetRef}>
+
+      {/* Hero Section */}
+      <div className="relative bg-gradient-to-br from-blue-50 via-blue-100 to-blue-200 pt-20 overflow-hidden">
+        {/* Background Elements */}
+        <div className="absolute inset-0 opacity-10">
+          <motion.div 
+            className="absolute top-10 left-10 transform -rotate-12"
+            initial={{ rotate: -12, scale: 0.9 }}
+            animate={{ rotate: 0, scale: 1 }}
+            transition={{ duration: 1, ease: "easeOut" }}
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+            <Shell className="w-32 h-32 text-blue-800" />
+          </motion.div>
+          <motion.div 
+            className="absolute bottom-10 right-10 transform rotate-12"
+            initial={{ rotate: 12, scale: 0.9 }}
+            animate={{ rotate: 0, scale: 1 }}
+            transition={{ duration: 1, ease: "easeOut" }}
           >
-            Read our docs
-          </a>
+            <Anchor className="w-32 h-32 text-blue-800" />
+          </motion.div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+
+        {/* Fishing Boat Image */}
+        <div className="absolute left-0 right-0 w-full md:w-3/4 h-full opacity-30 md:opacity-40 pointer-events-none md:translate-x-[-15%]">
+          <div className="relative w-full h-full">
+            <Image
+              src="/fishingboat.png"
+              alt="Fishing Boat"
+              fill
+              className="object-contain object-left-bottom md:object-center"
+              priority
+            />
+          </div>
+        </div>
+        
+        {/* Hero Content */}
+        <div className="container mx-auto px-6 py-24 relative">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="text-center max-w-3xl mx-auto"
+          >
+            <h1 className="text-5xl md:text-6xl font-bold text-blue-900 mb-6">
+              Atlantic Canada's Finest Seafood
+            </h1>
+            <p className="text-xl text-blue-700 mb-8">
+              Premium snow crab and lobster, sustainably harvested from the pristine waters of the North Atlantic since 1978.
+            </p>
+            <div className="flex gap-4 justify-center">
+              <Button
+                size="lg"
+                className="bg-blue-600 hover:bg-blue-700 focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 transition-all duration-300"
+                asChild
+              >
+                <a href="#products">Explore Products</a>
+              </Button>
+              <Button
+                size="lg"
+                variant="outline"
+                className="border-blue-600 text-blue-600 hover:bg-blue-50 focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 transition-all duration-300"
+                asChild
+              >
+                <Link href="/contact">Contact Us</Link>
+              </Button>
+            </div>
+          </motion.div>
+        </div>
+
+        <div className="h-24 bg-gradient-to-b from-transparent to-white absolute bottom-0 left-0 right-0" />
+      </div>
+
+      {/* Product Showcase */}
+      <motion.div
+        id="products"
+        style={{ opacity, scale }}
+        className="py-24 bg-white"
+      >
+        <div className="container mx-auto px-6">
+          <div className="relative">
+            <div className="bg-blue-50 rounded-2xl p-8 md:p-12 shadow-xl">
+              <div className="grid md:grid-cols-2 gap-12 items-center">
+                <div>
+                  <h2 className="text-3xl font-bold text-blue-900 mb-6">Premium Snow Crab</h2>
+                  <p className="text-blue-700 mb-6">
+                    Harvested from the cold, clean waters of Atlantic Canada, our snow crab is processed and flash-frozen within hours of catch to preserve its sweet, delicate flavor.
+                  </p>
+                  <ul className="space-y-3 text-blue-700">
+                    <motion.li 
+                      className="flex items-center gap-2"
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      <Waves className="w-5 h-5" />
+                      <span>Sustainably harvested</span>
+                    </motion.li>
+                    <motion.li 
+                      className="flex items-center gap-2"
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      <Ship className="w-5 h-5" />
+                      <span>Same-day processing</span>
+                    </motion.li>
+                    <motion.li 
+                      className="flex items-center gap-2"
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      <Shell className="w-5 h-5" />
+                      <span>Premium grade selection</span>
+                    </motion.li>
+                  </ul>
+                </div>
+                <div className="relative h-[400px]">
+                  <Image
+                    src="/crab.png"
+                    alt="Fresh Canadian Snow Crab"
+                    fill
+                    className="object-cover rounded-lg shadow-lg"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-24 bg-blue-50 rounded-2xl p-8 md:p-12 shadow-xl">
+              <div className="grid md:grid-cols-2 gap-12 items-center">
+                <div className="relative h-[400px] md:order-1">
+                  <Image
+                    src="/lobster.png"
+                    alt="Fresh Atlantic Lobster"
+                    fill
+                    className="object-cover rounded-lg shadow-lg"
+                  />
+                </div>
+                <div className="md:order-2">
+                  <h2 className="text-3xl font-bold text-blue-900 mb-6">Atlantic Lobster</h2>
+                  <p className="text-blue-700 mb-6">
+                    Our Atlantic lobsters are carefully selected from the pristine waters off Nova Scotia's coast. Each lobster is hand-picked and prepared to ensure the highest quality and most succulent meat.
+                  </p>
+                  <ul className="space-y-3 text-blue-700">
+                    <motion.li 
+                      className="flex items-center gap-2"
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      <Waves className="w-5 h-5" />
+                      <span>Wild-caught fresh</span>
+                    </motion.li>
+                    <motion.li 
+                      className="flex items-center gap-2"
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      <Ship className="w-5 h-5" />
+                      <span>Live shipping available</span>
+                    </motion.li>
+                    <motion.li 
+                      className="flex items-center gap-2"
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      <Shell className="w-5 h-5" />
+                      <span>Premium size selection</span>
+                    </motion.li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </motion.div>
+
+      {/* Heritage Section */}
+      <motion.div
+        id="heritage"
+        style={{ opacity, scale }}
+        className="py-24 bg-gradient-to-br from-blue-50 via-blue-100 to-blue-200"
+      >
+        <div className="container mx-auto px-6">
+          <div className="max-w-3xl mx-auto text-center">
+            <h2 className="text-4xl font-bold text-blue-900 mb-6">
+              A Legacy of Excellence
+            </h2>
+            <p className="text-xl text-blue-700 mb-12">
+              For over four decades, M&M Seafoods has been bringing the finest Atlantic Canadian seafood to tables around the world.
+            </p>
+          </div>
+          <div className="grid md:grid-cols-3 gap-8">
+            {[
+              {
+                year: '1978',
+                title: 'Our Beginning',
+                description: 'Founded in Cape Breton with a commitment to quality'
+              },
+              {
+                year: 'Today',
+                title: 'Global Reach',
+                description: 'Shipping premium seafood to customers worldwide'
+              },
+              {
+                year: 'Future',
+                title: 'Sustainable Growth',
+                description: 'Committed to ocean stewardship and community'
+              }
+            ].map((item, index) => (
+              <motion.div
+                key={item.year}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 * index, duration: 0.5 }}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="bg-white rounded-lg p-8 shadow-lg focus-within:ring-2 focus-within:ring-blue-400 focus-within:ring-offset-2 transition-all duration-300"
+                tabIndex={0}
+              >
+                <div className="text-blue-600 font-bold text-xl mb-2">{item.year}</div>
+                <h3 className="text-2xl font-bold text-blue-900 mb-4">{item.title}</h3>
+                <p className="text-blue-700">{item.description}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </motion.div>
+
+      {/* CTA Section */}
+      <motion.div
+        id="contact"
+        style={{ opacity, scale }}
+        className="py-24 bg-white"
+      >
+        <div className="container mx-auto px-6">
+          <div className="bg-blue-900 rounded-2xl p-12 text-center relative overflow-hidden">
+            <div className="absolute inset-0 opacity-10">
+              <motion.div 
+                className="absolute top-0 left-0 transform -translate-x-1/2 -translate-y-1/2"
+                animate={{ rotate: 360 }}
+                transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+              >
+                <Shell className="w-64 h-64 text-white" />
+              </motion.div>
+              <motion.div 
+                className="absolute bottom-0 right-0 transform translate-x-1/2 translate-y-1/2"
+                animate={{ rotate: -360 }}
+                transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+              >
+                <Anchor className="w-64 h-64 text-white" />
+              </motion.div>
+            </div>
+            <div className="relative">
+              <h2 className="text-4xl font-bold text-white mb-6">
+                Ready to Experience Atlantic Excellence?
+              </h2>
+              <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
+                Connect with us to learn more about our premium seafood products and global shipping capabilities.
+              </p>
+              <Button
+                size="lg"
+                className="bg-white text-blue-900 hover:bg-blue-50 focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 transition-all duration-300"
+                asChild
+              >
+                <Link href="/contact">Get in Touch</Link>
+              </Button>
+            </div>
+          </div>
+        </div>
+      </motion.div>
+
     </div>
-  );
+  )
 }
