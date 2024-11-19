@@ -7,8 +7,62 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
+import { useState } from 'react'
+import { useToast } from "@/components/ui/use-toast"
 
 export default function Page() {
+  const { toast } = useToast()
+  const [isLoading, setIsLoading] = useState(false)
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    message: ''
+  })
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setIsLoading(true)
+
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to send message')
+      }
+
+      toast({
+        title: "Success!",
+        description: "Your message has been sent successfully.",
+      })
+
+      // Reset form
+      setFormData({ name: '', email: '', message: '' })
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to send message. Please try again.",
+        variant: "destructive",
+      })
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setFormData(prev => ({
+      ...prev,
+      [e.target.id]: e.target.value
+    }))
+  }
+
   const teamMembers = [
     { name: 'Michel Brun', role: 'President & CEO', image: '/man1.png' },
     { name: 'Gino Brun', role: 'Sales Manager', image: '/man2.png' },
@@ -36,20 +90,46 @@ export default function Page() {
             className="bg-white p-8 rounded-lg shadow-lg"
           >
             <h2 className="text-2xl font-semibold text-blue-900 mb-6">Get in Touch</h2>
-            <form className="space-y-4">
+            <form className="space-y-4" onSubmit={handleSubmit}>
               <div>
                 <Label htmlFor="name">Name</Label>
-                <Input id="name" placeholder="Your Name" />
+                <Input 
+                  id="name" 
+                  placeholder="Your Name" 
+                  value={formData.name}
+                  onChange={handleChange}
+                  required
+                />
               </div>
               <div>
                 <Label htmlFor="email">Email</Label>
-                <Input id="email" type="email" placeholder="your@email.com" />
+                <Input 
+                  id="email" 
+                  type="email" 
+                  placeholder="your@email.com" 
+                  value={formData.email}
+                  onChange={handleChange}
+                  required
+                />
               </div>
               <div>
                 <Label htmlFor="message">Message</Label>
-                <Textarea id="message" placeholder="Your message here..." className="h-32" />
+                <Textarea 
+                  id="message" 
+                  placeholder="Your message here..." 
+                  className="h-32"
+                  value={formData.message}
+                  onChange={handleChange}
+                  required
+                />
               </div>
-              <Button type="submit" className="w-full">Send Message</Button>
+              <Button 
+                type="submit" 
+                className="w-full"
+                disabled={isLoading}
+              >
+                {isLoading ? 'Sending...' : 'Send Message'}
+              </Button>
             </form>
           </motion.div>
 
